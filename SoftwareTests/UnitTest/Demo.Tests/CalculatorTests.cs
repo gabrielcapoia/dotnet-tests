@@ -21,5 +21,21 @@ namespace Demo.Tests
             //Assert
             Assert.Equal(15, result);
         }
+
+        [Theory]
+        [InlineData(2,2,4)]
+        [InlineData(5,10,15)]
+        [InlineData(8,7,15)]
+        public void Calculator_Sum_ReturnCorrectSumValues(double v1, double v2, double total)
+        {
+            // Arrange
+            var calculator = new Calculator();
+
+            //Act
+            var result = calculator.Sum(v1, v2);
+
+            //Assert
+            Assert.Equal(total, result);
+        }
     }
 }
