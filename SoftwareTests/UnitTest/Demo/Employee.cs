@@ -66,7 +66,7 @@ namespace Demo
         Senior
     }
 
-    public class FuncionarioFactory
+    public class EmployeeFactory
     {
         public static Employee Create(string name, double salary)
         {
