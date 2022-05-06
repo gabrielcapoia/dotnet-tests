@@ -27,7 +27,7 @@ namespace Demo
 
         public void SetSalary(double salary)
         {
-            if (salary < 500) throw new Exception("Lower salary than allowed");
+            if (salary < 500) throw new Exception("Salary lower than allowed");
 
             Salary = salary;
             if (salary < 2000) ProfissionalLevel = ProfissionalLevel.Junior;
