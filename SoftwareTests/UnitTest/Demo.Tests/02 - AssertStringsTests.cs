@@ -18,7 +18,7 @@ namespace Demo.Tests
         }
 
         [Fact]
-        public void StringsTools_JoinNames_DeveIgnorarCase()
+        public void StringsTools_JoinNames_ShouldIgnoreCase()
         {
             // Arrange
             var sut = new StringsTools();
@@ -31,7 +31,7 @@ namespace Demo.Tests
         }
 
         [Fact]
-        public void StringsTools_JoinNames_DeveConterTrecho()
+        public void StringsTools_JoinNames_ShouldContainString()
         {
             // Arrange
             var sut = new StringsTools();
@@ -45,7 +45,7 @@ namespace Demo.Tests
 
 
         [Fact]
-        public void StringsTools_JoinNames_DeveComecarCom()
+        public void StringsTools_JoinNames_ShouldStartsWith()
         {
             // Arrange
             var sut = new StringsTools();
@@ -59,7 +59,7 @@ namespace Demo.Tests
 
 
         [Fact]
-        public void StringsTools_JoinNames_DeveAcabarCom()
+        public void StringsTools_JoinNames_ShouldEndsWith()
         {
             // Arrange
             var sut = new StringsTools();
@@ -73,7 +73,7 @@ namespace Demo.Tests
 
 
         [Fact]
-        public void StringsTools_JoinNames_ValidarExpressaoRegular()
+        public void StringsTools_JoinNames_ValidadeRegularExpression()
         {
             // Arrange
             var sut = new StringsTools();
