@@ -29,18 +29,36 @@ namespace NerdStore.Sales.Domain
 
         public void AddItem(OrderItem orderItem)
         {
-            if (orderItem.Quantity > MAX_ITEM_UNITS) throw new DomainException($"Max {MAX_ITEM_UNITS} units per product");
-            
-            if (orderItems.Any(product => product.ProductId == orderItem.ProductId))
+            ValidateQuantityItemAllowed(orderItem);
+
+            if (ExistsOrderItem(orderItem))
             {
                 var existingItem = orderItems.FirstOrDefault(product => product.ProductId == orderItem.ProductId);
+
                 existingItem.AddQuantity(orderItem.Quantity);
                 orderItem = existingItem;
 
                 orderItems.Remove(existingItem);
             }
 
-            this.orderItems.Add(orderItem);            
+            this.orderItems.Add(orderItem);
+        }
+
+        private bool ExistsOrderItem(OrderItem orderItem)
+        {
+            return orderItems.Any(product => product.ProductId == orderItem.ProductId);
+        }
+
+        private void ValidateQuantityItemAllowed(OrderItem orderItem)
+        {
+            var quantityItem = orderItem.Quantity;
+            if (ExistsOrderItem(orderItem))
+            {
+                var existingItem = orderItems.FirstOrDefault(product => product.ProductId == orderItem.ProductId);
+                quantityItem += existingItem.Quantity;
+            }
+
+            if (quantityItem > MAX_ITEM_UNITS) throw new DomainException($"Max {MAX_ITEM_UNITS} units per product");
         }
 
         public void SetAsDraft()

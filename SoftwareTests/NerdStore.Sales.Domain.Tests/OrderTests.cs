@@ -11,7 +11,7 @@ namespace NerdStore.Sales.Domain.Tests
     public class OrderTests
     {
         [Fact(DisplayName = "Add Item New Order")]
-        [Trait("Category", "Order Tests")]
+        [Trait("Category", "Sales - Order")]
         public void AddOrderItem_NewOrder_ShouldUpdateValue()
         {
             // Arrange
@@ -26,7 +26,7 @@ namespace NerdStore.Sales.Domain.Tests
         }
 
         [Fact(DisplayName = "Add Existing Item Order")]
-        [Trait("Category", "Order Tests")]
+        [Trait("Category", "Sales - Order")]
         public void AddOrderItem_ExistingItem_ShouldIncrementQuantityAndSumValues()
         {
             // Arrange
@@ -47,7 +47,7 @@ namespace NerdStore.Sales.Domain.Tests
         }
 
         [Fact(DisplayName = "Add Over Allowed Item Order")]
-        [Trait("Category", "Order Tests")]
+        [Trait("Category", "Sales - Order")]
         public void AddOrderItem_OverAllowedItems_ShouldReturnException()
         {
             //Arrange
@@ -57,6 +57,22 @@ namespace NerdStore.Sales.Domain.Tests
 
             //Act & Assert
             Assert.Throws<DomainException>(() => order.AddItem(orderItem));
+        }
+
+        [Fact(DisplayName = "Add Existing Item Over Allowed Item Order")]
+        [Trait("Category", "Sales - Order")]
+        public void AddOrderItem_ExistingItemSumOverAllowedItems_ShouldReturnException()
+        {
+            //Arrange
+            var order = Order.OrderFactory.NewDraftOrder(Guid.NewGuid());
+            Guid productId = Guid.NewGuid();
+            var orderItem = new OrderItem(productId, "Order Test", 1, 50);
+            order.AddItem(orderItem);
+
+            var orderItem2 = new OrderItem(productId, "Order Test", Order.MAX_ITEM_UNITS, 50);
+
+            //Act & Assert
+            Assert.Throws<DomainException>(() => order.AddItem(orderItem2));
         }
     }
 }
