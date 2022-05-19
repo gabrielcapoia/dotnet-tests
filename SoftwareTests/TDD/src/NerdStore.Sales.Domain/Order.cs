@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NerdStore.Core.DomainObjects;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,6 +9,9 @@ namespace NerdStore.Sales.Domain
 {
     public class Order
     {
+        public static int MAX_ITEM_UNITS = 15;
+        public static int MIN_ITEM_UNITS = 1;
+
         protected Order()
         {
             orderItems = new List<OrderItem>();
@@ -25,6 +29,8 @@ namespace NerdStore.Sales.Domain
 
         public void AddItem(OrderItem orderItem)
         {
+            if (orderItem.Quantity > MAX_ITEM_UNITS) throw new DomainException($"Max {MAX_ITEM_UNITS} units per product");
+            
             if (orderItems.Any(product => product.ProductId == orderItem.ProductId))
             {
                 var existingItem = orderItems.FirstOrDefault(product => product.ProductId == orderItem.ProductId);
@@ -55,5 +61,5 @@ namespace NerdStore.Sales.Domain
                 return order;
             }
         }
-    }
+    }    
 }
