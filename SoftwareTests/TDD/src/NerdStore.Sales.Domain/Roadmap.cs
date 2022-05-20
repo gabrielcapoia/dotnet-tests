@@ -28,8 +28,8 @@ namespace NerdStore.Sales.Domain
                 2.4 - An item must remain between 1 and 15 units of the product - ok
 
             3 - Delete Item
-                3.1 - The item must be on the list to be removed
-                3.2 - When removing an item it is necessary to calculate the total value of the order
+                3.1 - The item must be on the list to be removed - ok
+                3.2 - When removing an item it is necessary to calculate the total value of the order - 
 
             A voucher has a unique code and the discount can be in percentage or fixed amount
             Use a flag indicating that an order had a discount voucher applied and the discount amount generated

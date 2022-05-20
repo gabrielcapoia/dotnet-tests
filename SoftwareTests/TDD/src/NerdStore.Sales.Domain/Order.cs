@@ -55,6 +55,13 @@ namespace NerdStore.Sales.Domain
             orderItems.Add(orderItem);
         }
 
+        public void DeleteItem(OrderItem orderItem)
+        {
+            ValidateNonExistOrderItem(orderItem);
+
+            orderItems.Remove(orderItem);
+        }
+
         private void ValidateNonExistOrderItem(OrderItem orderItem)
         {
             if (!ExistsOrderItem(orderItem))

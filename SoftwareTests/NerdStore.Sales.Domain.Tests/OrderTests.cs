@@ -145,5 +145,39 @@ namespace NerdStore.Sales.Domain.Tests
             //Act & Assert
             Assert.Throws<DomainException>(() => order.UpdateItem(updatedOrderItem));
         }
+
+        [Fact(DisplayName = "Delete Non Existing Order Item")]
+        [Trait("Category", "Sales - Order")]
+        public void DeleteOrderItem_NonExistingOrderItem_ShouldReturnException()
+        {
+            //Arrange
+            var order = Order.OrderFactory.NewDraftOrder(Guid.NewGuid());
+            var orderItem = new OrderItem(Guid.NewGuid(), "Order Test", 5, 50);
+
+            //Act & Assert
+            Assert.Throws<DomainException>(() => order.DeleteItem(orderItem));
+        }
+
+        [Fact(DisplayName = "Delete Order Item Validate Order Amount")]
+        [Trait("Category", "Sales - Order")]
+        public void DeleteOrderItem_OrderWithDifferentItems_ShouldUpdateOrderAmount()
+        {
+            //Arrange
+            var order = Order.OrderFactory.NewDraftOrder(Guid.NewGuid());
+
+            var orderItem1 = new OrderItem(Guid.NewGuid(), "Order Test 1", 2, 50);
+            order.AddItem(orderItem1);
+
+            Guid productId = Guid.NewGuid();
+            var orderItem2 = new OrderItem(productId, "Order Test 2", 2, 40);
+            order.AddItem(orderItem2);
+                        
+            var orderAmount = orderItem2.Quantity * orderItem2.UnitValue;
+            //Act
+            order.DeleteItem(orderItem1);
+
+            //Assert
+            Assert.Equal(orderAmount, order.Amount);
+        }
     }
 }
