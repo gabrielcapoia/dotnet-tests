@@ -41,7 +41,24 @@ namespace NerdStore.Sales.Domain
                 orderItems.Remove(existingItem);
             }
 
-            this.orderItems.Add(orderItem);
+            orderItems.Add(orderItem);
+        }
+
+        public void UpdateItem(OrderItem orderItem)
+        {
+            ValidateNonExistOrderItem(orderItem);
+            ValidateQuantityItemAllowed(orderItem);
+
+            var existingItem = orderItems.FirstOrDefault(product => product.ProductId == orderItem.ProductId);
+
+            orderItems.Remove(existingItem);
+            orderItems.Add(orderItem);
+        }
+
+        private void ValidateNonExistOrderItem(OrderItem orderItem)
+        {
+            if (!ExistsOrderItem(orderItem))
+                throw new DomainException($"Order item does not exist in the order");
         }
 
         private bool ExistsOrderItem(OrderItem orderItem)

@@ -16,18 +16,18 @@ namespace NerdStore.Sales.Domain
             An order while not started (payment process) is in draft state
             and must belong to a customer.
 
-            1 - Add Item
-                1.1 - When adding an item it is necessary to calculate the total value of the order
-                1.2 - If an item is already on the list then you must add the item's quantity to the order
-                1.3 - The item must have between 1 and 15 units of the product
+            1 - Add Item - ok
+                1.1 - When adding an item it is necessary to calculate the total value of the order - ok
+                1.2 - If an item is already on the list then you must add the item's quantity to the order - ok
+                1.3 - The item must have between 1 and 15 units of the product - ok
 
-            2 - Item Update
-                2.1 - The item needs to be on the list to be updated
-                2.2 - An item can be upgraded containing more or less units than previously
-                2.3 - When updating an item it is necessary to calculate the total value of the order
-                2.4 - An item must remain between 1 and 15 units of the product
+            2 - Update Item
+                2.1 - The item needs to be on the list to be updated - ok
+                2.2 - An item can be upgraded containing more or less units than previously - ok
+                2.3 - When updating an item it is necessary to calculate the total value of the order - ok
+                2.4 - An item must remain between 1 and 15 units of the product - ok
 
-            3 - Item Removal
+            3 - Delete Item
                 3.1 - The item must be on the list to be removed
                 3.2 - When removing an item it is necessary to calculate the total value of the order
 
