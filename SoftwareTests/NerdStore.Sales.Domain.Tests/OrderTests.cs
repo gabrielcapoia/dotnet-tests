@@ -25,7 +25,7 @@ namespace NerdStore.Sales.Domain.Tests
             Assert.Equal(150, order.Amount);
         }
 
-        [Fact(DisplayName = "Add Existing Item Order")]
+        [Fact(DisplayName = "Add Existing Order Item")]
         [Trait("Category", "Sales - Order")]
         public void AddOrderItem_ExistingItem_ShouldIncrementQuantityAndSumValues()
         {
@@ -46,22 +46,21 @@ namespace NerdStore.Sales.Domain.Tests
             Assert.Equal(4, order.OrderItems.FirstOrDefault(product => product.ProductId == productId).Quantity);
         }
 
-        [Fact(DisplayName = "Add Over Allowed Item Order")]
+        [Fact(DisplayName = "Add Over Allowed Order Item")]
         [Trait("Category", "Sales - Order")]
         public void AddOrderItem_OverAllowedItems_ShouldReturnException()
         {
             //Arrange
             var order = Order.OrderFactory.NewDraftOrder(Guid.NewGuid());
-            Guid productId = Guid.NewGuid();
-            var orderItem = new OrderItem(productId, "Order Test", Order.MAX_ITEM_UNITS + 1, 50);
+            var orderItem = new OrderItem(Guid.NewGuid(), "Order Test", Order.MAX_ITEM_UNITS + 1, 50);
 
             //Act & Assert
             Assert.Throws<DomainException>(() => order.AddItem(orderItem));
         }
 
-        [Fact(DisplayName = "Add Existing Item Over Allowed Item Order")]
+        [Fact(DisplayName = "Add Existing Item Over Allowed Quantity Order Item")]
         [Trait("Category", "Sales - Order")]
-        public void AddOrderItem_ExistingItemSumOverAllowedItems_ShouldReturnException()
+        public void AddOrderItem_ExistingItemSumOverAllowedQuantityItems_ShouldReturnException()
         {
             //Arrange
             var order = Order.OrderFactory.NewDraftOrder(Guid.NewGuid());
@@ -73,6 +72,78 @@ namespace NerdStore.Sales.Domain.Tests
 
             //Act & Assert
             Assert.Throws<DomainException>(() => order.AddItem(orderItem2));
+        }
+
+        [Fact(DisplayName = "Update Non Existing Order Item")]
+        [Trait("Category", "Sales - Order")]
+        public void UpdateOrderItem_NonExistingOrderItem_ShouldReturnException()
+        {
+            //Arrange
+            var order = Order.OrderFactory.NewDraftOrder(Guid.NewGuid());
+            var orderItem = new OrderItem(Guid.NewGuid(), "Order Test", 5, 50);
+
+            //Act & Assert
+            Assert.Throws<DomainException>(() => order.UpdateItem(orderItem));
+        }
+
+        [Fact(DisplayName = "Update Valid Order Item")]
+        [Trait("Category", "Sales - Order")]
+        public void UpdateOrderItem_ValidOrderItem_ShouldUpdateQuantity()
+        {
+            //Arrange
+            var order = Order.OrderFactory.NewDraftOrder(Guid.NewGuid());
+            Guid productId = Guid.NewGuid();
+            var orderItem = new OrderItem(productId, "Order Test", 2, 50);
+            order.AddItem(orderItem);
+
+            var updatedOrderItem = new OrderItem(productId, "Order Test", 5, 50);
+            var newQuantity = updatedOrderItem.Quantity;
+            //Act
+            order.UpdateItem(updatedOrderItem);
+
+            //Assert
+            Assert.Equal(newQuantity, order.OrderItems.FirstOrDefault(product => product.ProductId == productId).Quantity);
+        }
+
+        [Fact(DisplayName = "Update Order Item Validate Order Amount")]
+        [Trait("Category", "Sales - Order")]
+        public void UpdateOrderItem_OrderWithDifferentItems_ShouldUpdateOrderAmount()
+        {
+            //Arrange
+            var order = Order.OrderFactory.NewDraftOrder(Guid.NewGuid());
+
+            var orderItem1 = new OrderItem(Guid.NewGuid(), "Order Test 1", 2, 50);
+            order.AddItem(orderItem1);
+
+            Guid productId = Guid.NewGuid();
+            var orderItem2 = new OrderItem(productId, "Order Test 2", 2, 40);
+            order.AddItem(orderItem2);
+
+            var updatedOrderItem = new OrderItem(productId, "Order Test", 5, 40);
+            var orderAmount = orderItem1.Quantity * orderItem1.UnitValue +
+                              updatedOrderItem.Quantity * updatedOrderItem.UnitValue;
+            //Act
+            order.UpdateItem(updatedOrderItem);
+
+            //Assert
+            Assert.Equal(orderAmount, order.Amount);
+        }
+
+        [Fact(DisplayName = "Update Order Item Over Allowed Quantity Order Item")]
+        [Trait("Category", "Sales - Order")]
+        public void UpdateOrderItem_OverAllowedQuantityItems_ShouldReturnException()
+        {
+            //Arrange
+            var order = Order.OrderFactory.NewDraftOrder(Guid.NewGuid());
+
+            Guid productId = Guid.NewGuid();
+            var orderItem = new OrderItem(productId, "Order Test 2", 2, 40);
+            order.AddItem(orderItem);
+
+            var updatedOrderItem = new OrderItem(productId, "Order Test", Order.MAX_ITEM_UNITS + 1, 40);
+
+            //Act & Assert
+            Assert.Throws<DomainException>(() => order.UpdateItem(updatedOrderItem));
         }
     }
 }
