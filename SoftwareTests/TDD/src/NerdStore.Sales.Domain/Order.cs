@@ -1,4 +1,5 @@
-﻿using NerdStore.Core.DomainObjects;
+﻿using FluentValidation.Results;
+using NerdStore.Core.DomainObjects;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,13 +20,22 @@ namespace NerdStore.Sales.Domain
 
         public Guid CustomerId { get; private set; }
 
-        public decimal Amount => OrderItems.Sum(item => item.Amount);
-
+        public decimal Amount => CalculateAmount();
+        public decimal DiscountAmount => CalculateDiscountAmount();
         public OrderStatus OrderStatus { get; private set; }
 
         private readonly List<OrderItem> orderItems;
 
         public IReadOnlyCollection<OrderItem> OrderItems => orderItems;
+
+        public bool HasVoucherApplyed => Voucher != null;
+
+        public Voucher Voucher { get; private set; }
+
+        public void SetAsDraft()
+        {
+            OrderStatus = OrderStatus.Draft;
+        }
 
         public void AddItem(OrderItem orderItem)
         {
@@ -62,6 +72,13 @@ namespace NerdStore.Sales.Domain
             orderItems.Remove(orderItem);
         }
 
+        public ValidationResult ApplyVoucher(Voucher voucher)
+        {
+            var result = voucher.ValidateIfItIsApplicable();
+            if (result.IsValid) Voucher = voucher;
+            return result;
+        }
+
         private void ValidateNonExistOrderItem(OrderItem orderItem)
         {
             if (!ExistsOrderItem(orderItem))
@@ -85,9 +102,23 @@ namespace NerdStore.Sales.Domain
             if (quantityItem > MAX_ITEM_UNITS) throw new DomainException($"Max {MAX_ITEM_UNITS} units per product");
         }
 
-        public void SetAsDraft()
+        private decimal CalculateAmount()
         {
-            OrderStatus = OrderStatus.Draft;
+            decimal totalAmount = OrderItems.Sum(item => item.Amount);
+            return totalAmount - CalculateDiscountAmount();
+        }
+
+        private decimal CalculateDiscountAmount()
+        {
+            if (!HasVoucherApplyed) return 0;
+
+            if (Voucher.DiscountTypeVoucher == DiscountTypeVoucher.Value && Voucher.DiscountAmount.HasValue)
+                return Voucher.DiscountAmount.Value;
+
+            if (Voucher.DiscountTypeVoucher == DiscountTypeVoucher.Percentage && Voucher.DiscountPercentage.HasValue)
+                return (OrderItems.Sum(item => item.Amount) * Voucher.DiscountPercentage.Value) / 100;
+
+            return 0;
         }
 
         public static class OrderFactory
@@ -103,5 +134,5 @@ namespace NerdStore.Sales.Domain
                 return order;
             }
         }
-    }    
+    }
 }

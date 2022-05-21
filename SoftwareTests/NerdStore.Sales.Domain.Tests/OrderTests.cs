@@ -179,5 +179,88 @@ namespace NerdStore.Sales.Domain.Tests
             //Assert
             Assert.Equal(orderAmount, order.Amount);
         }
+
+        [Fact(DisplayName = "Apply valid voucher")]
+        [Trait("Category", "Sales - Order")]
+        public void Order_ApplyValidVoucher_ShouldReturnWithoutErros()
+        {
+            //Arrange
+            var order = Order.OrderFactory.NewDraftOrder(Guid.NewGuid());
+            var voucher = new Voucher("PROMO-15", null, 10, 1,
+                DateTime.Now.AddDays(15), true, false, DiscountTypeVoucher.Percentage);
+
+            //Act
+            var result = order.ApplyVoucher(voucher);
+
+            //Assert
+            Assert.True(result.IsValid);
+        }
+
+        [Fact(DisplayName = "Apply Invalid voucher")]
+        [Trait("Category", "Sales - Order")]
+        public void Order_ApplyInvalidVoucher_ShouldReturnWithErros()
+        {
+            //Arrange
+            var order = Order.OrderFactory.NewDraftOrder(Guid.NewGuid());
+            var voucher = new Voucher("PROMO-15", null, 10, 1,
+                DateTime.Now.AddDays(-1), true, false, DiscountTypeVoucher.Percentage);
+
+            //Act
+            var result = order.ApplyVoucher(voucher);
+
+            //Assert
+            Assert.False(result.IsValid);
+        }
+
+        [Fact(DisplayName = "Apply type value voucher")]
+        [Trait("Category", "Sales - Order")]
+        public void ApplyVoucher_TypeValueVoucher_ShouldDiscountFromOrderAmount()
+        {
+            //Arrange
+            var order = Order.OrderFactory.NewDraftOrder(Guid.NewGuid());
+
+            var orderItem1 = new OrderItem(Guid.NewGuid(), "Order Test 1", 2, 50);
+            order.AddItem(orderItem1);
+
+            var orderItem2 = new OrderItem(Guid.NewGuid(), "Order Test 2", 2, 40);
+            order.AddItem(orderItem2);
+
+            var voucher = new Voucher("PROMO-15", 20, null, 1,
+                DateTime.Now.AddDays(15), true, false, DiscountTypeVoucher.Value);
+
+            var amountWithDiscount = order.Amount - voucher.DiscountAmount;
+
+            //Act
+            order.ApplyVoucher(voucher);
+
+            //Assert
+            Assert.Equal(amountWithDiscount, order.Amount);
+        }
+
+        [Fact(DisplayName = "Apply type percentage voucher")]
+        [Trait("Category", "Sales - Order")]
+        public void ApplyVoucher_TypePercentageVoucher_ShouldDiscountFromOrderAmount()
+        {
+            //Arrange
+            var order = Order.OrderFactory.NewDraftOrder(Guid.NewGuid());
+
+            var orderItem1 = new OrderItem(Guid.NewGuid(), "Order Test 1", 2, 50);
+            order.AddItem(orderItem1);
+
+            var orderItem2 = new OrderItem(Guid.NewGuid(), "Order Test 2", 2, 40);
+            order.AddItem(orderItem2);
+
+            var voucher = new Voucher("PROMO-15", null, 10, 1,
+                DateTime.Now.AddDays(15), true, false, DiscountTypeVoucher.Percentage);
+
+            var discountAmount = (order.Amount * voucher.DiscountPercentage) / 100;
+            var amountWithDiscount = order.Amount - discountAmount;
+
+            //Act
+            order.ApplyVoucher(voucher);
+
+            //Assert
+            Assert.Equal(amountWithDiscount, order.Amount);
+        }
     }
 }
