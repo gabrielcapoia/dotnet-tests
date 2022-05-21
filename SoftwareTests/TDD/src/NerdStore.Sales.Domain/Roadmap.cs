@@ -34,19 +34,19 @@ namespace NerdStore.Sales.Domain
             A voucher has a unique code and the discount can be in percentage or fixed amount
             Use a flag indicating that an order had a discount voucher applied and the discount amount generated
 
-            4 - Apply discount voucher
+            4 - Apply discount voucher - ok
                 4.1 - The voucher can only be applied if it is valid, for this: - ok
                     4.1.1 - Must have a code - ok
                     4.1.2 - The expiration date is greater than the current date - ok
                     4.1.3 - The voucher is active - ok
                     4.1.4 - The voucher has available quantity - ok
                     4.1.5 - One of the discount forms must be filled in with a value above 0 - ok
-                4.2 - Calculate the discount according to the type of voucher
-                    4.2.1 - Voucher with percentage discount
-                    4.2.2 - Voucher with discount in amounts (reais)
-                4.3 - When the discount amount exceeds the order total, the order receives the value: 0
+                4.2 - Calculate the discount according to the type of voucher - ok
+                    4.2.1 - Voucher with percentage discount - ok
+                    4.2.2 - Voucher with discount in amounts (reais) - ok
+                4.3 - When the discount amount exceeds the order total, the order receives the value: 0 - ok
                 4.4 - After applying the voucher, the discount must be recalculated after any modification of the list
-                      of order items
+                      of order items - ok
         */
 
         /* REQUEST COMMANDS - HANDLER */
@@ -55,7 +55,7 @@ namespace NerdStore.Sales.Domain
             The order handler will handle a command for each intent against the order.
             In all manipulated commands must be checked:
 
-                If the command is valid
+                If the command is valid - ok
                 If the order exists
                 If the order item exists
 
