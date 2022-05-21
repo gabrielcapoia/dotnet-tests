@@ -262,5 +262,50 @@ namespace NerdStore.Sales.Domain.Tests
             //Assert
             Assert.Equal(amountWithDiscount, order.Amount);
         }
+
+        [Fact(DisplayName = "Discount Amount Greater Than Order Amount")]
+        [Trait("Category", "Sales - Order")]
+        public void ApplyVoucher_DiscountAmountGreaterThanOrderAmount_OrderAmountShouldBeZero()
+        {
+            //Arrange
+            var order = Order.OrderFactory.NewDraftOrder(Guid.NewGuid());
+
+            var orderItem1 = new OrderItem(Guid.NewGuid(), "Order Test 1", 2, 50);
+            order.AddItem(orderItem1);
+
+            var voucher = new Voucher("PROMO-15", 150, null, 1,
+                DateTime.Now.AddDays(15), true, false, DiscountTypeVoucher.Value);
+
+            //Act
+            order.ApplyVoucher(voucher);
+
+            //Assert
+            Assert.Equal(0, order.Amount);
+        }
+
+        [Fact(DisplayName = "Apply voucher recalculate Amount with discount on update order items")]
+        [Trait("Category", "Sales - Order")]
+        public void ApplyVoucher_UpdateOrderItems_ShouldDiscountOrderAmount()
+        {
+            //Arrange
+            var order = Order.OrderFactory.NewDraftOrder(Guid.NewGuid());
+
+            var orderItem1 = new OrderItem(Guid.NewGuid(), "Order Test 1", 2, 50);
+            order.AddItem(orderItem1);
+
+            var voucher = new Voucher("PROMO-15", 40, null, 1,
+                DateTime.Now.AddDays(15), true, false, DiscountTypeVoucher.Value);
+
+            order.ApplyVoucher(voucher);
+
+            var orderItem2 = new OrderItem(Guid.NewGuid(), "Order Test 2", 2, 40);
+            
+            //Act
+            order.AddItem(orderItem2);
+
+            //Assert
+            var amountWithDiscount = order.OrderItems.Sum(item => item.Amount) - voucher.DiscountAmount;
+            Assert.Equal(amountWithDiscount, order.Amount);
+        }
     }
 }

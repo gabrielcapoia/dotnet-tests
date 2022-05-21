@@ -105,7 +105,11 @@ namespace NerdStore.Sales.Domain
         private decimal CalculateAmount()
         {
             decimal totalAmount = OrderItems.Sum(item => item.Amount);
-            return totalAmount - CalculateDiscountAmount();
+            decimal totalAmountWithDiscount = totalAmount - CalculateDiscountAmount();
+
+            totalAmountWithDiscount = totalAmountWithDiscount < 0 ? 0 : totalAmountWithDiscount;
+
+            return totalAmountWithDiscount;
         }
 
         private decimal CalculateDiscountAmount()
