@@ -12,7 +12,7 @@ namespace NerdStore.Sales.Domain.Tests
     {
         [Fact(DisplayName = "New Item Order Below Allowed")]
         [Trait("Category", "Sales - Order Item")]
-        public void AddOrderItem_BellowllowedItems_ShouldReturnException()
+        public void InsertOrderItem_BellowllowedItems_ShouldReturnException()
         {
             //Arrange, Act & Assert
             Assert.Throws<DomainException>(() => new OrderItem(Guid.NewGuid(), "Order Test", Order.MIN_ITEM_UNITS - 1, 50));

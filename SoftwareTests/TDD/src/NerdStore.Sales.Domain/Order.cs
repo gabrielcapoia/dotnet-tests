@@ -37,7 +37,7 @@ namespace NerdStore.Sales.Domain
             OrderStatus = OrderStatus.Draft;
         }
 
-        public void AddItem(OrderItem orderItem)
+        public void InsertItem(OrderItem orderItem)
         {
             ValidateQuantityItemAllowed(orderItem);
 
