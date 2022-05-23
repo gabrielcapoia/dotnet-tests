@@ -26,13 +26,19 @@ namespace NerdStore.Sales.Application.Tests.Orders
             var mocker = new AutoMocker();
             var orderHandler = mocker.CreateInstance<OrderCommandHandler>();
 
+            mocker.GetMock<IOrderRepository>()
+                .Setup(repository => repository.UnitOfWork.Commit())
+                .Returns(Task.FromResult(true));
+
             //Act
             var result = await orderHandler.Handle(orderCommand, CancellationToken.None);
 
             //Assert
             Assert.True(result);
             mocker.GetMock<IOrderRepository>().Verify(repository => repository.Insert(It.IsAny<Order>()), Times.Once);
-            mocker.GetMock<IMediator>().Verify(mediator => mediator.Publish(It.IsAny<INotification>(), CancellationToken.None), Times.Once);
+            mocker.GetMock<IOrderRepository>().Verify(repository => repository.UnitOfWork.Commit(), Times.Once);
+            //mocker.GetMock<IMediator>().Verify(mediator => mediator.Publish(It.IsAny<INotification>(), CancellationToken.None), Times.Once);
+
         }
     }
 }

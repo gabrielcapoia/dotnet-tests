@@ -29,10 +29,10 @@ namespace NerdStore.Sales.Application.Commands
 
             orderRepository.Insert(order);
 
-            await mediator
-                .Publish(new InsertedOrderItemEvent(order.CustomerId, order.Id, message.ProductId, 
-                message.ProductName, message.Quantity, message.UnitValue), cancellationToken);
-            return true;
+            order.InsertEvent(new InsertedOrderItemEvent(order.CustomerId, order.Id, message.ProductId, 
+                message.ProductName, message.Quantity, message.UnitValue));
+
+            return await orderRepository.UnitOfWork.Commit();
         }
     }
 }
