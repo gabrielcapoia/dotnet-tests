@@ -85,7 +85,7 @@ namespace NerdStore.Sales.Domain
                 throw new DomainException($"Order item does not exist in the order");
         }
 
-        private bool ExistsOrderItem(OrderItem orderItem)
+        public bool ExistsOrderItem(OrderItem orderItem)
         {
             return orderItems.Any(product => product.ProductId == orderItem.ProductId);
         }
