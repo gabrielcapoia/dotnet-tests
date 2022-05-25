@@ -15,6 +15,23 @@ namespace NerdStore.Sales.Application.Tests.Orders
 {
     public class OrderCommandHandlerTests
     {
+        private readonly AutoMocker mocker;
+        private readonly OrderCommandHandler orderHandler;
+        private readonly Guid customerId;
+        private readonly Guid productId;
+        private readonly Order order;
+
+        public OrderCommandHandlerTests()
+        {
+            mocker = new AutoMocker();
+            orderHandler = mocker.CreateInstance<OrderCommandHandler>();
+
+            customerId = Guid.NewGuid();
+            productId = Guid.NewGuid();
+
+            order = Order.OrderFactory.NewDraftOrder(customerId);
+        }
+
         [Fact(DisplayName = "Insert Item New Order with Success")]
         [Trait("Category", "Sales - Order Command Handler")]
         public async Task InsertOrderItem_NewOrder_ShouldRunWithSuccess()
@@ -22,9 +39,6 @@ namespace NerdStore.Sales.Application.Tests.Orders
             //Arrenge
             var orderCommand = new InsertOrderItemCommand(Guid.NewGuid(),
                 Guid.NewGuid(), "Product Test", 2, 100);
-
-            var mocker = new AutoMocker();
-            var orderHandler = mocker.CreateInstance<OrderCommandHandler>();
 
             mocker.GetMock<IOrderRepository>()
                 .Setup(repository => repository.UnitOfWork.Commit())
@@ -45,18 +59,12 @@ namespace NerdStore.Sales.Application.Tests.Orders
         public async Task InsertOrderItem_NewItemDraftedOrder_ShouldRunWithSuccess()
         {
             //Arrenge
-            var customerId = Guid.NewGuid();
-
-            var order = Order.OrderFactory.NewDraftOrder(customerId);
             var orderItem = new OrderItem(Guid.NewGuid(), "Order Test", 3, 50);
             order.InsertItem(orderItem);
 
             var orderCommand = new InsertOrderItemCommand(customerId,
                 Guid.NewGuid(), "Product Test", 2, 100);
-
-            var mocker = new AutoMocker();
-            var orderHandler = mocker.CreateInstance<OrderCommandHandler>();
-
+                        
             mocker.GetMock<IOrderRepository>()
                 .Setup(repository => repository.GetDraftedOrderByCustomerId(customerId))
                 .Returns(Task.FromResult(order));
@@ -80,19 +88,12 @@ namespace NerdStore.Sales.Application.Tests.Orders
         public async Task InsertOrderItem_ExistingItemDraftedOrder_ShouldRunWithSuccess()
         {
             //Arrenge
-            var customerId = Guid.NewGuid();
-            var productId = Guid.NewGuid();
-
-            var order = Order.OrderFactory.NewDraftOrder(customerId);
             var orderItem = new OrderItem(productId, "Product Test", 3, 50);
             order.InsertItem(orderItem);
 
             var orderCommand = new InsertOrderItemCommand(customerId,
                 productId, "Product Test", 1, 50);
-
-            var mocker = new AutoMocker();
-            var orderHandler = mocker.CreateInstance<OrderCommandHandler>();
-
+                        
             mocker.GetMock<IOrderRepository>()
                 .Setup(repository => repository.GetDraftedOrderByCustomerId(customerId))
                 .Returns(Task.FromResult(order));
@@ -117,10 +118,7 @@ namespace NerdStore.Sales.Application.Tests.Orders
         {
             //Arrange
             var orderCommand = new InsertOrderItemCommand(Guid.Empty, Guid.Empty, string.Empty, 0, 0);
-
-            var mocker = new AutoMocker();
-            var orderHandler = mocker.CreateInstance<OrderCommandHandler>();
-
+                        
             //Act
             var result = await orderHandler.Handle(orderCommand, CancellationToken.None);
 
