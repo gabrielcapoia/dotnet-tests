@@ -18,6 +18,7 @@ namespace NerdStore.Sales.Domain
             orderItems = new List<OrderItem>();
         }
 
+        public int Code { get; private set; }
         public Guid CustomerId { get; private set; }
 
         public decimal Amount => CalculateAmount();
@@ -30,6 +31,9 @@ namespace NerdStore.Sales.Domain
 
         public bool HasVoucherApplyed => Voucher != null;
 
+        public DateTime CreatedAt { get; private set; }
+
+        public Guid? VoucherId { get; private set; }
         public Voucher Voucher { get; private set; }
 
         public void SetAsDraft()
@@ -40,6 +44,8 @@ namespace NerdStore.Sales.Domain
         public void InsertItem(OrderItem orderItem)
         {
             ValidateQuantityItemAllowed(orderItem);
+
+            orderItem.AssociateOrder(Id);
 
             if (ExistsOrderItem(orderItem))
             {
@@ -58,6 +64,7 @@ namespace NerdStore.Sales.Domain
         {
             ValidateNonExistOrderItem(orderItem);
             ValidateQuantityItemAllowed(orderItem);
+            orderItem.AssociateOrder(Id);
 
             var existingItem = orderItems.FirstOrDefault(product => product.ProductId == orderItem.ProductId);
 
@@ -88,6 +95,12 @@ namespace NerdStore.Sales.Domain
         public bool ExistsOrderItem(OrderItem orderItem)
         {
             return orderItems.Any(product => product.ProductId == orderItem.ProductId);
+        }
+
+        public void UpdateQuantity(OrderItem item, int unidades)
+        {
+            item.UpdateQuantity(unidades);
+            UpdateItem(item);
         }
 
         private void ValidateQuantityItemAllowed(OrderItem orderItem)

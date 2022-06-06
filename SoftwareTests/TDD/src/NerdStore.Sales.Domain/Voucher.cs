@@ -1,5 +1,6 @@
 ﻿using FluentValidation;
 using FluentValidation.Results;
+using NerdStore.Core.DomainObjects;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace NerdStore.Sales.Domain
 {
-    public class Voucher
+    public class Voucher : Entity
     {
         public string Code { get; private set; }
         public decimal? DiscountAmount { get; private set; }
@@ -18,6 +19,8 @@ namespace NerdStore.Sales.Domain
         public bool Active { get; private set; }
         public bool Used { get; private set; }
         public DiscountTypeVoucher DiscountTypeVoucher { get; private set; }
+
+        public ICollection<Order> Orders { get; set; }
 
         public Voucher(string code, decimal? discountAmount, decimal? discountPercentage, int quantity, 
             DateTime expirationDate, bool active, bool used, DiscountTypeVoucher discountTypeVoucher)

@@ -1,0 +1,36 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+    <UserSecretsId>aspnet-NerdStore.WebApp.MVC-63E29EEE-C58E-4988-B401-783D2279DA1B</UserSecretsId>
+    <AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel>
+  </PropertyGroup>
+
+
+  <ItemGroup>
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="6.1.1" />
+    <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="10.0.1" />
+    <PackageReference Include="Microsoft.AspNetCore.App" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="5.0.17" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="5.0.17" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.17" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="5.0.17">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="5.0.17" />    
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.2.3" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="4.0.1" />
+  </ItemGroup>
+
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\TDD\src\NerdStore.Core\NerdStore.Core.csproj" />
+    <ProjectReference Include="..\..\..\TDD\src\NerdStore.Sales.Application\NerdStore.Sales.Application.csproj" />
+    <ProjectReference Include="..\..\..\TDD\src\NerdStore.Sales.Data\NerdStore.Sales.Data.csproj" />
+    <ProjectReference Include="..\NerdStore.Catalogo.Application\NerdStore.Catalogo.Application.csproj" />
+    <ProjectReference Include="..\NerdStore.Catalogo.Data\NerdStore.Catalogo.Data.csproj" />
+    <ProjectReference Include="..\NerdStore.Catalogo.Domain\NerdStore.Catalogo.Domain.csproj" />
+  </ItemGroup>
+
+</Project>

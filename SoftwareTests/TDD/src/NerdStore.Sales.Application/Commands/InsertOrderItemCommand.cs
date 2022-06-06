@@ -11,7 +11,7 @@ namespace NerdStore.Sales.Application.Commands
 {
     public class InsertOrderItemCommand : Command
     {
-        public InsertOrderItemCommand(Guid customerId, Guid productId, string productName, int quantity, int unitValue)
+        public InsertOrderItemCommand(Guid customerId, Guid productId, string productName, int quantity, decimal unitValue)
         {
             CustomerId = customerId;
             ProductId = productId;
@@ -31,7 +31,7 @@ namespace NerdStore.Sales.Application.Commands
             return ValidationResult.IsValid;
         }
 
-        public int UnitValue { get; }
+        public decimal UnitValue { get; }
     }
 
     public class InsertOrderItemValidation : AbstractValidator<InsertOrderItemCommand>
