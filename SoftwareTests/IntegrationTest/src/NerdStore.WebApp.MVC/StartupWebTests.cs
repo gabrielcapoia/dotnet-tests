@@ -50,10 +50,13 @@ namespace NerdStore.WebApp.MVC
             services.AddDbContext<SalesContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
-            services.AddIdentityCore<IdentityUser>()                
+            services
+                .AddDefaultIdentity<IdentityUser>()
+                .AddDefaultUI()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
 
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            services.AddRazorPages();
+
             services.AddHttpContextAccessor();
 
             services.AddAutoMapper(typeof(DomainToViewModelMappingProfile), typeof(ViewModelToDomainMappingProfile));
@@ -81,13 +84,14 @@ namespace NerdStore.WebApp.MVC
             app.UseStaticFiles();
             app.UseCookiePolicy();
 
+            app.UseRouting();
+
             app.UseAuthentication();
-            
-            app.UseMvc(routes =>
+            app.UseAuthorization();
+
+            app.UseEndpoints(endpoints =>
             {
-                routes.MapRoute(
-                    name: "default",
-                    template: "{controller=Vitrine}/{action=Index}/{id?}");
+                endpoints.MapRazorPages();
             });
         }
     }

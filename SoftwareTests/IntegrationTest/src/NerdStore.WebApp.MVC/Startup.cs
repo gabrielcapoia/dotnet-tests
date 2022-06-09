@@ -3,6 +3,7 @@ using AutoMapper;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -48,11 +49,13 @@ namespace NerdStore.WebApp.MVC
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
             services
-                .AddIdentityCore<IdentityUser>()
+                .AddDefaultIdentity<IdentityUser>()
+                .AddDefaultUI()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
 
 
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            services.AddRazorPages();
+
             services.AddHttpContextAccessor();
 
             services.AddSwaggerGen(c =>
@@ -116,14 +119,15 @@ namespace NerdStore.WebApp.MVC
             app.UseStaticFiles();
             app.UseCookiePolicy();
 
+            app.UseRouting();
+
             app.UseAuthentication();
-            
-            //app.UseMvc(routes =>
-            //{
-            //    routes.MapRoute(
-            //        name: "default",
-            //        template: "{controller=Vitrine}/{action=Index}/{id?}");
-            //});
+            app.UseAuthorization();
+
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapRazorPages();
+            });
 
             app.UseSwagger();
             app.UseSwaggerUI(s =>
