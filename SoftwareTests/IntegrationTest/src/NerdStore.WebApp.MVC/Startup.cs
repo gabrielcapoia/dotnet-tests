@@ -127,6 +127,9 @@ namespace NerdStore.WebApp.MVC
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapRazorPages();
+                endpoints.MapControllerRoute(
+                        name: "default",
+                        pattern: "{controller=Vitrine}/{action=Index}/{id?}");
             });
 
             app.UseSwagger();
