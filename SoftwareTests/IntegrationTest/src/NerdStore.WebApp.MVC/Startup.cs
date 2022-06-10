@@ -17,6 +17,7 @@ using NerdStore.Sales.Data;
 using NerdStore.WebApp.MVC.Setup;
 using Microsoft.OpenApi.Models;
 using System;
+using NerdStore.WebApp.MVC.Models;
 
 namespace NerdStore.WebApp.MVC
 {
@@ -53,6 +54,8 @@ namespace NerdStore.WebApp.MVC
                 .AddDefaultUI()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
 
+            var appSettingsSection = Configuration.GetSection("AppSettings");
+            services.Configure<AppSettings>(appSettingsSection);
 
             services.AddRazorPages();
 
