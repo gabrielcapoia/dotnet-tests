@@ -41,39 +41,39 @@ namespace NerdStore.Sales.Data.Repository
             return pedido;
         }
 
-        public Task<IEnumerable<Order>> GetListByCustomerId(Guid customerId)
+        public async Task<IEnumerable<Order>> GetListByCustomerId(Guid customerId)
         {
-            throw new NotImplementedException();
+            return await _context.Orders.AsNoTracking().Where(p => p.CustomerId == customerId).ToListAsync();
         }
 
-        public Task<OrderItem> GetOrderItemByOrder(Guid orderId, Guid produtId)
+        public async Task<OrderItem> GetOrderItemByOrder(Guid orderId, Guid produtId)
         {
-            throw new NotImplementedException();
+            return await _context.OrderItems.FirstOrDefaultAsync(p => p.ProductId == produtId && p.OrderId == orderId);
         }
 
-        public Task<Voucher> GetVoucherByCode(string code)
+        public async Task<Voucher> GetVoucherByCode(string code)
         {
-            throw new NotImplementedException();
+            return await _context.Vouchers.FirstOrDefaultAsync(p => p.Code == code);
         }
 
         public void Insert(Order order)
         {
-            throw new NotImplementedException();
+            _context.Orders.Add(order);
         }
 
         public void InsertItem(OrderItem orderItem)
         {
-            throw new NotImplementedException();
+            _context.OrderItems.Add(orderItem);
         }
 
         public void Update(Order order)
         {
-            throw new NotImplementedException();
+            _context.Orders.Update(order);
         }
 
         public void UpdateItem(OrderItem orderItem)
         {
-            throw new NotImplementedException();
+            _context.OrderItems.Update(orderItem);
         }
 
         public void Dispose()

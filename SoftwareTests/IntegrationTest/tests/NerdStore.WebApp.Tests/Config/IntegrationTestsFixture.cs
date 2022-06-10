@@ -41,7 +41,10 @@ namespace NerdStore.WebApp.Tests.Config
         {
             var clientOptions = new WebApplicationFactoryClientOptions
             {
-
+                AllowAutoRedirect = true,
+                BaseAddress = new Uri("http://localhost"),
+                HandleCookies = true,
+                MaxAutomaticRedirections = 7
             };
 
             Factory = new AppStoreFactory<TStartup>();
@@ -59,6 +62,28 @@ namespace NerdStore.WebApp.Tests.Config
             }
 
             throw new ArgumentException($"Anti forgery token '{AntiForgeryFieldName}' not found", nameof(htmlBody));
+        }
+
+        public async Task RunLoginWeb()
+        {
+            var initialResponse = await Client.GetAsync("/Identity/Account/Login");
+            initialResponse.EnsureSuccessStatusCode();
+
+            var antiForgeryToken = GetAntiForgeryToken(await initialResponse.Content.ReadAsStringAsync());
+
+            var formData = new Dictionary<string, string>
+            {
+                {AntiForgeryFieldName, antiForgeryToken},
+                {"Input.Email", "teste1@teste.com"},
+                {"Input.Password", "Teste@123"}
+            };
+
+            var postRequest = new HttpRequestMessage(HttpMethod.Post, "/Identity/Account/Login")
+            {
+                Content = new FormUrlEncodedContent(formData)
+            };
+
+            await Client.SendAsync(postRequest);
         }
 
         public void GenerateUserPassword()
