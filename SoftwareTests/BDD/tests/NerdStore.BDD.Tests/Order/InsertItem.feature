@@ -14,14 +14,14 @@ And The order amount is equal to the inserted item amount
 Scenario: Add items over limit
 Given that a product is on display
 And be available in stock
-And the user is logged in
+And The user is logged in
 When User adds an item above the maximum allowed quantity
 Then you will receive an error message mentioning that the limit amount has been exceeded
 
 Scenario: Add existing item to cart
 Given that a product is on display
 And be available in stock
-And the user is logged in
+And The user is logged in
 And The same product has already been added to the cart previously
 When User adds a unit to cart
 Then The user will be redirected to the purchase summary
@@ -31,7 +31,7 @@ And The total value of the order will be the multiplication of the quantity of i
 Scenario: Add existing item where sum exceeds maximum limit
 Given that a product is on display
 And be available in stock
-And the user is logged in
+And The user is logged in
 And The same product has already been added to the cart previously
 When The user adds the maximum amount allowed to the cart
 Then The user will be redirected to the purchase summary
