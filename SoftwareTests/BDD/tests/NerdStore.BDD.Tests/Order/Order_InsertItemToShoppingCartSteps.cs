@@ -1,17 +1,38 @@
-﻿using System;
+﻿using NerdStore.BDD.Tests.Config;
+using System;
 using TechTalk.SpecFlow;
+using Xunit;
 
 namespace NerdStore.BDD.Tests.Order
 {
     [Binding]
+    [CollectionDefinition(nameof(AutomacaoWebFixtureCollection))]
     public class Order_InsertItemToShoppingCartSteps
     {
+
+        private readonly AutomacaoWebTestsFixture _testsFixture;
+        private readonly OrderScreen _orderScreen;
+
+        private string _urlProduto;
+
+        public Order_InsertItemToShoppingCartSteps(AutomacaoWebTestsFixture testsFixture)
+        {
+            _testsFixture = testsFixture;
+            _orderScreen = new OrderScreen(testsFixture.BrowserHelper);
+        }
+
         [Given(@"A product is in o display")]
         public void GivenAProductIsInODisplay()
         {
-            //Arrange
+            //Arrange           
+            _orderScreen.AcessarVitrineDeProdutos();
+
             //Act
-            //Assert
+            _orderScreen.ObterDetalhesDoProduto();
+            _urlProduto = _orderScreen.ObterUrl();
+
+            // Assert
+            Assert.True(_orderScreen.ValidarProdutoDisponivel());
         }
         
         [Given(@"It is available in stock")]
