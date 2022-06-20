@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Bogus;
+using NerdStore.BDD.Tests.User;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -15,20 +17,20 @@ namespace NerdStore.BDD.Tests.Config
         public SeleniumHelper BrowserHelper;
         public readonly ConfigurationHelper Configuration;
 
-        //public Usuario.Usuario Usuario;
+        public Usuario Usuario;
 
         public AutomacaoWebTestsFixture()
         {
-            //Usuario = new Usuario.Usuario();
+            Usuario = new Usuario();
             Configuration = new ConfigurationHelper();
-            BrowserHelper = new SeleniumHelper(Browser.Chrome, Configuration);
+            BrowserHelper = new SeleniumHelper(Browser.Chrome, Configuration, false);
         }
 
-        //public void GerarDadosUsuario()
-        //{
-        //    var faker = new Faker("pt_BR");
-        //    Usuario.Email = faker.Internet.Email().ToLower();
-        //    Usuario.Senha = faker.Internet.Password(8, false, "", "@1Ab_");
-        //}
+        public void GerarDadosUsuario()
+        {
+            var faker = new Faker("pt_BR");
+            Usuario.Email = faker.Internet.Email().ToLower();
+            Usuario.Senha = faker.Internet.Password(8, false, "", "@1Ab_");
+        }
     }
 }
