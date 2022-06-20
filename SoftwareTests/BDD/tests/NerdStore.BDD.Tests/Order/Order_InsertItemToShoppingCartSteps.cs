@@ -1,4 +1,5 @@
 ﻿using NerdStore.BDD.Tests.Config;
+using NerdStore.BDD.Tests.User;
 using System;
 using TechTalk.SpecFlow;
 using Xunit;
@@ -12,6 +13,7 @@ namespace NerdStore.BDD.Tests.Order
 
         private readonly AutomacaoWebTestsFixture _testsFixture;
         private readonly OrderScreen _orderScreen;
+        private readonly UserLoginScreen _userLoginScreen;
 
         private string _urlProduto;
 
@@ -19,6 +21,25 @@ namespace NerdStore.BDD.Tests.Order
         {
             _testsFixture = testsFixture;
             _orderScreen = new OrderScreen(testsFixture.BrowserHelper);
+            _userLoginScreen = new UserLoginScreen(testsFixture.BrowserHelper);
+        }
+
+        [Given(@"The user is logged in")]
+        public void GivenTheUserIsLoggedIn()
+        {
+            // Arrange
+            var usuario = new Usuario
+            {
+                Email = "teste1@teste.com",
+                Senha = "Teste@123"
+            };
+            _testsFixture.Usuario = usuario;
+
+            // Act 
+            var login = _userLoginScreen.Login(usuario);
+
+            // Assert
+            Assert.True(login);
         }
 
         [Given(@"A product is in o display")]
@@ -38,129 +59,98 @@ namespace NerdStore.BDD.Tests.Order
         [Given(@"It is available in stock")]
         public void GivenItIsAvailableInStock()
         {
-            //Arrange
-            //Act
-            //Assert
-        }
-
-        [Given(@"The user is logged in")]
-        public void GivenTheUserIsLoggedIn()
-        {
-            //Arrange
-            //Act
-            //Assert
-        }
-
-        [Given(@"that a product is on display")]
-        public void GivenThatAProductIsOnDisplay()
-        {
-            //Arrange
-            //Act
-            //Assert
-        }
-
-        [Given(@"be available in stock")]
-        public void GivenBeAvailableInStock()
-        {
-            //Arrange
-            //Act
-            //Assert
-        }
-
-        [Given(@"The same product has already been added to the cart previously")]
-        public void GivenTheSameProductHasAlreadyBeenAddedToTheCartPreviously()
-        {
-            //Arrange
-            //Act
-            //Assert
+            // Assert
+            Assert.True(_orderScreen.ObterQuantidadeNoEstoque() > 0);
         }
 
         [When(@"the user insert a item to the cart")]
         public void WhenTheUserInsertAItemToTheCart()
         {
-            //Arrange
-            //Act
-            //Assert
-        }
-
-        [When(@"User adds an item above the maximum allowed quantity")]
-        public void WhenUserAddsAnItemAboveTheMaximumAllowedQuantity()
-        {
-            //Arrange
-            //Act
-            //Assert
-        }
-
-        [When(@"User adds a unit to cart")]
-        public void WhenUserAddsAUnitToCart()
-        {
-            //Arrange
-            //Act
-            //Assert
-        }
-
-        [When(@"The user adds the maximum amount allowed to the cart")]
-        public void WhenTheUserAddsTheMaximumAmountAllowedToTheCart()
-        {
-            //Arrange
-            //Act
-            //Assert
+            // Act 
+            _orderScreen.ClicarEmComprarAgora();
         }
 
         [Then(@"the user will be redirect to purchase summary")]
         public void ThenTheUserWillBeRedirectToPurchaseSummary()
         {
-            //Arrange
-            //Act
-            //Assert
+            // Assert
+            Assert.True(_orderScreen.ValidarSeEstaNoCarrinhoDeCompras());
         }
 
         [Then(@"The order amount is equal to the inserted item amount")]
         public void ThenTheOrderAmountIsEqualToTheInsertedItemAmount()
         {
-            //Arrange
-            //Act
-            //Assert
+            // Arrange
+            var valorUnitario = _orderScreen.ObterValorUnitarioProdutoCarrinho();
+            var valorCarrinho = _orderScreen.ObterValorTotalCarrinho();
+
+            // Assert
+            Assert.Equal(valorUnitario, valorCarrinho);
+        }
+
+        [When(@"User adds an item above the maximum allowed quantity")]
+        public void WhenUserAddsAnItemAboveTheMaximumAllowedQuantity()
+        {
+            // Arrange 
+            _orderScreen.ClicarAdicionarQuantidadeItens(Sales.Domain.Order.MAX_ITEM_UNITS + 1);
+
+            // Act
+            _orderScreen.ClicarEmComprarAgora();
         }
 
         [Then(@"you will receive an error message mentioning that the limit amount has been exceeded")]
         public void ThenYouWillReceiveAnErrorMessageMentioningThatTheLimitAmountHasBeenExceeded()
         {
-            //Arrange
-            //Act
-            //Assert
+            // Arrange
+            var mensagem = _orderScreen.ObterMensagemDeErroProduto();
+
+            // Assert
+            Assert.Contains($"The maximum quantity of an item is {Sales.Domain.Order.MAX_ITEM_UNITS}", mensagem);
         }
 
-        [Then(@"The user will be redirected to the purchase summary")]
-        public void ThenTheUserWillBeRedirectedToThePurchaseSummary()
+        [Given(@"The same product has already been added to the cart previously")]
+        public void GivenTheSameProductHasAlreadyBeenAddedToTheCartPreviously()
         {
-            //Arrange
-            //Act
-            //Assert
+            // Act
+            _orderScreen.NavegarParaCarrinhoDeCompras();
+            _orderScreen.ZerarCarrinhoDeCompras();
+            _orderScreen.AcessarVitrineDeProdutos();
+            _orderScreen.ObterDetalhesDoProduto();
+            _orderScreen.ClicarEmComprarAgora();
+
+            // Assert
+            Assert.True(_orderScreen.ValidarSeEstaNoCarrinhoDeCompras());
+
+            _orderScreen.VoltarNavegacao();
         }
 
         [Then(@"The number of items for that product will have been increased by one more unit")]
         public void ThenTheNumberOfItemsForThatProductWillHaveBeenIncreasedByOneMoreUnit()
         {
-            //Arrange
-            //Act
-            //Assert
+            // Assert
+            Assert.True(_orderScreen.ObterQuantidadeDeItensPrimeiroProdutoCarrinho() == 2);
         }
 
         [Then(@"The total value of the order will be the multiplication of the quantity of items by the unit value")]
         public void ThenTheTotalValueOfTheOrderWillBeTheMultiplicationOfTheQuantityOfItemsByTheUnitValue()
         {
-            //Arrange
-            //Act
-            //Assert
+            // Arrange
+            var valorUnitario = _orderScreen.ObterValorUnitarioProdutoCarrinho();
+            var valorCarrinho = _orderScreen.ObterValorTotalCarrinho();
+            var quantidadeUnidades = _orderScreen.ObterQuantidadeDeItensPrimeiroProdutoCarrinho();
+
+            // Assert
+            Assert.Equal(valorUnitario * quantidadeUnidades, valorCarrinho);
         }
 
-        [Then(@"You will receive an error message mentioning that the limit quantity has been exceeded")]
-        public void ThenYouWillReceiveAnErrorMessageMentioningThatTheLimitQuantityHasBeenExceeded()
+        [When(@"The user adds the maximum amount allowed to the cart")]
+        public void WhenTheUserAddsTheMaximumAmountAllowedToTheCart()
         {
-            //Arrange
-            //Act
-            //Assert
+            // Arrange 
+            _orderScreen.ClicarAdicionarQuantidadeItens(Sales.Domain.Order.MAX_ITEM_UNITS);
+
+            // Act
+            _orderScreen.ClicarEmComprarAgora();
         }
     }
 }

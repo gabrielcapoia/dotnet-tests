@@ -99,13 +99,13 @@ this.ScenarioInitialize(scenarioInfo);
             {
                 this.ScenarioStart();
 #line 7
-testRunner.Given("A product is in o display", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+testRunner.Given("The user is logged in", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line hidden
 #line 8
-testRunner.And("It is available in stock", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+testRunner.And("A product is in o display", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
 #line 9
-testRunner.And("The user is logged in", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+testRunner.And("It is available in stock", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
 #line 10
 testRunner.When("the user insert a item to the cart", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
@@ -139,13 +139,13 @@ this.ScenarioInitialize(scenarioInfo);
             {
                 this.ScenarioStart();
 #line 15
-testRunner.Given("that a product is on display", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+testRunner.Given("The user is logged in", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line hidden
 #line 16
-testRunner.And("be available in stock", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+testRunner.And("A product is in o display", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
 #line 17
-testRunner.And("The user is logged in", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+testRunner.And("It is available in stock", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
 #line 18
 testRunner.When("User adds an item above the maximum allowed quantity", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
@@ -177,22 +177,22 @@ this.ScenarioInitialize(scenarioInfo);
             {
                 this.ScenarioStart();
 #line 22
-testRunner.Given("that a product is on display", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+testRunner.Given("The user is logged in", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line hidden
 #line 23
-testRunner.And("be available in stock", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+testRunner.And("A product is in o display", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
 #line 24
-testRunner.And("The user is logged in", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+testRunner.And("It is available in stock", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
 #line 25
 testRunner.And("The same product has already been added to the cart previously", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
 #line 26
-testRunner.When("User adds a unit to cart", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+testRunner.When("the user insert a item to the cart", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
 #line 27
-testRunner.Then("The user will be redirected to the purchase summary", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+testRunner.Then("the user will be redirect to purchase summary", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
 #line 28
 testRunner.And("The number of items for that product will have been increased by one more unit", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
@@ -224,13 +224,13 @@ this.ScenarioInitialize(scenarioInfo);
             {
                 this.ScenarioStart();
 #line 32
-testRunner.Given("that a product is on display", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+testRunner.Given("The user is logged in", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line hidden
 #line 33
-testRunner.And("be available in stock", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+testRunner.And("A product is in o display", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
 #line 34
-testRunner.And("The user is logged in", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+testRunner.And("It is available in stock", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
 #line 35
 testRunner.And("The same product has already been added to the cart previously", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
@@ -239,11 +239,8 @@ testRunner.And("The same product has already been added to the cart previously",
 testRunner.When("The user adds the maximum amount allowed to the cart", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
 #line 37
-testRunner.Then("The user will be redirected to the purchase summary", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
-#line hidden
-#line 38
-testRunner.And("You will receive an error message mentioning that the limit quantity has been exc" +
-                        "eeded", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+testRunner.Then("you will receive an error message mentioning that the limit amount has been excee" +
+                        "ded", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             }
             this.ScenarioCleanup();
